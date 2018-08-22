@@ -25,6 +25,7 @@
             android:drawableTint="@color/colorPrimaryDark"
             android:drawableLeft="@drawable/ic_height"
             android:hint="@string/height"
+            android:id="@+id/bmi_height"
             />
 
         <EditText
@@ -33,6 +34,7 @@
             android:drawableTint="@color/colorPrimaryDark"
             android:drawableLeft="@drawable/ic_weight"
             android:hint="@string/weight"
+            android:id="@+id/bmi_weight"
             />
 
         <Button
@@ -40,6 +42,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:text="@string/calcu"
+            android:id="@+id/bmi_calcu_btn"
             />
 
         <TextView
@@ -56,10 +59,11 @@
             android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="26.55"
+            android:hint="0"
             android:textSize="30dp"
             android:textColor="@color/colorPrimaryDark"
             android:layout_gravity="center"
+            android:id="@+id/bmi_result"
             />
 
     </LinearLayout>

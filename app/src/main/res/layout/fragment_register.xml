@@ -27,34 +27,44 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_person_id"
             android:drawableTint="@color/colorPrimaryDark"
-            android:hint="@string/user_id" />
+            android:hint="@string/user_id"
+            android:id="@+id/reg_user_id"
+            />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_person_name"
             android:drawableTint="@color/colorPrimaryDark"
-            android:hint="@string/name" />
+            android:hint="@string/name"
+            android:id="@+id/reg_name"
+            />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_date"
             android:drawableTint="@color/colorPrimaryDark"
-            android:hint="@string/age" />
+            android:hint="@string/age"
+            android:id="@+id/reg_age"
+            />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_lock"
             android:drawableTint="@color/colorPrimaryDark"
-            android:hint="@string/password" />
+            android:hint="@string/password"
+            android:id="@+id/reg_password"
+            />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:text="@string/btn_reg" />
+            android:text="@string/btn_reg"
+            android:id="@+id/reg_reg_btn"
+            />
 
     </LinearLayout>
 

@@ -23,6 +23,7 @@
             android:drawableTint="@color/colorPrimaryDark"
             android:drawableLeft="@drawable/ic_person_id"
             android:hint="@string/user_id"
+            android:id="@+id/login_user_id"
             />
 
         <EditText
@@ -31,6 +32,7 @@
             android:drawableTint="@color/colorPrimaryDark"
             android:drawableLeft="@drawable/ic_lock"
             android:hint="@string/password"
+            android:id="@+id/login_password"
             />
 
         <Button
@@ -38,6 +40,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:text="@string/btn_log"
+            android:id="@+id/login_log_btn"
             />
 
         <TextView
@@ -45,6 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_reg"
+            android:id="@+id/login_reg_btn"
+            android:clickable="true"
             />
 
     </LinearLayout>
