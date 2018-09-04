@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class RegisterFragment extends Fragment{
@@ -28,7 +29,7 @@ public class RegisterFragment extends Fragment{
     }
 
     void initRegisterBtn (){
-        Button _regBtn = getView().findViewById(R.id.reg_reg_btn);
+        TextView _regBtn = getView().findViewById(R.id.reg_reg_btn);
         _regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

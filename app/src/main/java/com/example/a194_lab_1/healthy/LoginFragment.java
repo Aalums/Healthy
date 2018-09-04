@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginFragment extends Fragment{
@@ -46,10 +47,10 @@ public class LoginFragment extends Fragment{
                 } else if (_userIdStr.equals("admin") && _passwordStr.equals("admin")) {
                     getActivity().getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.main_view, new BMIFragment())
+                            .replace(R.id.main_view, new MenuFragment())
                             .addToBackStack(null)
                             .commit();
-                    Log.d("USER", "GOTO BMI");
+                    Log.d("USER", "GOTO MENU");
                 } else {
                     Toast.makeText(
                             getActivity(), "user or password ไม่ถูกต้อง", Toast.LENGTH_SHORT
@@ -61,7 +62,7 @@ public class LoginFragment extends Fragment{
     }
 
     void initRegisterBtn (){
-        Button _regBtn = getView().findViewById(R.id.login_reg_btn);
+        TextView _regBtn = getView().findViewById(R.id.login_reg_btn);
         _regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -38,7 +38,6 @@ public class BMIFragment extends Fragment{
                 TextView _result = getView().findViewById(R.id.bmi_result);
                 String _heightStr = _height.getText().toString();
                 String _weightStr = _weight.getText().toString();
-                String _resultStr = _result.getText().toString();
 
                 if (_heightStr.isEmpty() || _weightStr.isEmpty()) {
                     Toast.makeText(
@@ -48,8 +47,7 @@ public class BMIFragment extends Fragment{
                 } else {
                     Float _heightFlo = Float.parseFloat(_heightStr)/100;
                     Float _weightFlo = Float.parseFloat(_weightStr);
-                    Float _resultFlo = Float.parseFloat(_resultStr);
-                    _resultFlo = _weightFlo/(_heightFlo*_heightFlo);
+                    Float _resultFlo = _weightFlo / (_heightFlo * _heightFlo);
                     _result.setText(_resultFlo.toString());
                     Log.d("BMI", "BMI IS VALUE");
                 }
