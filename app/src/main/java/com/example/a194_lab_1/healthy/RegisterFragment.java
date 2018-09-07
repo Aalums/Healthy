@@ -55,10 +55,10 @@ public class RegisterFragment extends Fragment{
                 } else {
                     getActivity().getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.main_view, new BMIFragment())
+                            .replace(R.id.main_view, new MenuFragment())
                             .addToBackStack(null)
                             .commit();
-                    Log.d("REGISTER", "GOTO BMI");
+                    Log.d("REGISTER", "GOTO MENU");
                 }
             }
         });
