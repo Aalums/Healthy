@@ -28,10 +28,12 @@ public class WeightAdapter extends ArrayAdapter<Weight> {
         View _weightItem = LayoutInflater.from(context)
                 .inflate(R.layout.fragment_weight_item, parent, false);
 
+        //เรียกตัวแปรจากหน้า fragment_weight_item
         TextView _date = _weightItem.findViewById(R.id.weight_item_date);
         TextView _weight = _weightItem.findViewById(R.id.weight_item_weight);
         TextView _status = _weightItem.findViewById(R.id.weight_item_status);
 
+        //เรียกคลาส Weight เพื่อ get ค่าออกมาแสดงที่ fragment_weight_item
         Weight _row = weights.get(position);
         _date.setText(_row.getDate());
         _weight.setText(_row.getWeight());

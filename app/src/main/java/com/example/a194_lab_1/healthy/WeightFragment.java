@@ -21,15 +21,21 @@ public class WeightFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //เพิ่มค่าใน ArrayList
         weights.add(new Weight("01 Jan 2018", 63, "UP"));
         weights.add(new Weight("02 Jan 2018", 64, "DOWN"));
         weights.add(new Weight("03 Jan 2018", 63, "UP"));
 
+        //เรียกใช้คลาส Adapter (สร้าง ArrayAdapter) ใช้ดึงข้อมูลใน Array มาแสดงใน ListView
+        //รับตัวแปร 3 ตัว คือ context, id ของ Layout, Data จาก Array
+        //โดยถ้าขอมูลมีตัวเดียวเรียก Layout ที่มีอยู่แล้วมาใช้ก็ได้ android.R.layout.simple_list_item_1 ตัวอย่างจาก MenuFragment
         WeightAdapter _weightAdapter = new WeightAdapter(
                 getActivity(), R.layout.fragment_weight_item, weights
         );
 
+        //เรียกหน้าที่ต้องการแสดง ListView
         ListView _weightList = getView().findViewById(R.id.weight_list);
+        //สั่งให้นำ Adapter ไปแสดงบน ListView
         _weightList.setAdapter(_weightAdapter);
 
         initAddBtn();

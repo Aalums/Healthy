@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -58,12 +59,13 @@ public class WeightFormFragment extends Fragment {
                 String _dateStr = _date.getText().toString();
                 int _weightInt = Integer.parseInt(_weight.getText().toString());
 
-                weights.add(new Weight(_dateStr, _weightInt, ""));
+                weights.add(new Weight(_dateStr, _weightInt, "N/A"));
 
                 Toast.makeText(
                         getActivity(), "บันทึกเรียบร้อย", Toast.LENGTH_SHORT
                 ).show();
                 Log.d("WEIGHT_FORM", "SAVE");
+
             }
         });
     }
