@@ -13,7 +13,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class RegisterFragment extends Fragment{
+
+    //เรียกใช้ Firebase
+    final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,33 +43,61 @@ public class RegisterFragment extends Fragment{
         _regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText _userId = getView().findViewById(R.id.reg_user_id);
-                EditText _name = getView().findViewById(R.id.reg_name);
-                EditText _age = getView().findViewById(R.id.reg_age);
+                final EditText _email = getView().findViewById(R.id.reg_email);
                 EditText _password = getView().findViewById(R.id.reg_password);
-                String _userIdStr = _userId.getText().toString();
-                String _nameStr = _name.getText().toString();
-                String _ageStr = _age.getText().toString();
-                String _passwordStr = _password.getText().toString();
+                EditText _repassword = getView().findViewById(R.id.reg_re_password);
 
-                if (_userIdStr.isEmpty() || _nameStr.isEmpty() || _ageStr.isEmpty() || _passwordStr.isEmpty()) {
+                final String _emailStr = _email.getText().toString();
+                String _passwordStr = _password.getText().toString();
+                String _repasswordStr = _repassword.getText().toString();
+
+                if (_passwordStr.length() < 6) {
                     Toast.makeText(
-                            getActivity(),"กรุณาระบุข้อมูลให้ครบถ้วน", Toast.LENGTH_SHORT
+                            getActivity(), "Password ต้องมี 6 ตัวอักษาขึ้นไป", Toast.LENGTH_SHORT
                     ).show();
-                    Log.d("REGISTER", "FIELD NAME IS EMPTY");
-                } else if (_userIdStr.equals("admin")) {
+                    Log.d("REGISTER", "PASSWORD ERROR");
+                } else if (_passwordStr.equals(_repasswordStr) == false) {
                     Toast.makeText(
-                            getActivity(),"user นี้มีอยู่ในระบบแล้ว", Toast.LENGTH_SHORT
+                            getActivity(), "Password ไม่ตรงกัน", Toast.LENGTH_SHORT
                     ).show();
-                    Log.d("REGISTER", "USER ALREADY EXIST");
+                    Log.d("REGISTER", "PASSWORD NOT MATCH");
                 } else {
-                    getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.main_view, new MenuFragment())
-                            .addToBackStack(null)
-                            .commit();
-                    Log.d("REGISTER", "GOTO MENU");
+                    mAuth.createUserWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            //ถ้าสำเร็จ ให้เรียกใช้ sendVerifiedEmail
+                            sendVerifiedEmail(mAuth.getCurrentUser());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //ถ้าไม่สำเร็จ แสดงข้อความ ERROR
+                            Toast.makeText(
+                                    getActivity(), "ERROR", Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    });
                 }
+            }
+        });
+    }
+
+    //ส่ง email confirm ไปที่ user
+    void sendVerifiedEmail(FirebaseUser _user) {
+        _user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                //ถ้าสำเร็จ ไปหน้า Login
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_view, new LoginFragment())
+                        .addToBackStack(null)
+                        .commit();
+                Log.d("REGISTER", "GOTO LOGIN");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
             }
         });
     }

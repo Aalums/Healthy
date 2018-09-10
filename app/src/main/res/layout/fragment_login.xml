@@ -22,11 +22,12 @@
             android:layout_height="wrap_content"
             android:drawableTint="@color/colorPrimaryDark"
             android:drawableLeft="@drawable/ic_person_id"
-            android:hint="@string/user_id"
-            android:id="@+id/login_user_id"
+            android:hint="@string/email"
+            android:id="@+id/login_email"
             />
 
         <EditText
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableTint="@color/colorPrimaryDark"

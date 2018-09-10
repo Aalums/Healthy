@@ -13,7 +13,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class LoginFragment extends Fragment{
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,29 +43,32 @@ public class LoginFragment extends Fragment{
         _loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText _userId = getView().findViewById(R.id.login_user_id);
+                EditText _email = getView().findViewById(R.id.login_email);
                 EditText _password = getView().findViewById(R.id.login_password);
-                String _userIdStr = _userId.getText().toString();
+
+                String _emailStr = _email.getText().toString();
                 String _passwordStr = _password.getText().toString();
 
-                if (_userIdStr.isEmpty() || _passwordStr.isEmpty()) {
-                    Toast.makeText(
-                            getActivity(),"กรุณาระบุ user or password", Toast.LENGTH_SHORT
-                    ).show();
-                    Log.d("USER", "USER OR PASSWORD IS EMPTY");
-                } else if (_userIdStr.equals("admin") && _passwordStr.equals("admin")) {
-                    getActivity().getSupportFragmentManager()
+                FirebaseUser mUser = mAuth.getCurrentUser();
+
+                mAuth.signInWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        getActivity().getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.main_view, new MenuFragment())
                             .addToBackStack(null)
                             .commit();
-                    Log.d("USER", "GOTO MENU");
-                } else {
-                    Toast.makeText(
-                            getActivity(), "user or password ไม่ถูกต้อง", Toast.LENGTH_SHORT
-                    ).show();
-                    Log.d("USER", "INVALID USER OR PASSWORD");
-                }
+                        Log.d("LOGIN", "GOTO MENU");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(
+                            getActivity(), "กรุณาเข้าสู่ระบบ", Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
             }
         });
     }
