@@ -51,24 +51,30 @@ public class LoginFragment extends Fragment{
 
                 FirebaseUser mUser = mAuth.getCurrentUser();
 
-                mAuth.signInWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.main_view, new MenuFragment())
-                            .addToBackStack(null)
-                            .commit();
-                        Log.d("LOGIN", "GOTO MENU");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(
+                if (_emailStr.isEmpty() && _passwordStr.isEmpty()){
+                    Toast.makeText(
                             getActivity(), "กรุณาเข้าสู่ระบบ", Toast.LENGTH_SHORT
-                        ).show();
-                    }
-                });
+                    ).show();
+                } else {
+                    mAuth.signInWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.main_view, new MenuFragment())
+                                    .addToBackStack(null)
+                                    .commit();
+                            Log.d("LOGIN", "GOTO MENU");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(
+                                    getActivity(), "กรุณาลงทะเบียนผู้ใช้ก่อนเข้าสู้ระบบ", Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    });
+                }
             }
         });
     }
