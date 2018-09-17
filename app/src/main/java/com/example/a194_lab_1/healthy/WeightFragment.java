@@ -11,9 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class WeightFragment extends Fragment {
+
+    FirebaseFirestore mDB;
+    FirebaseAuth _auth;
 
     ArrayList<Weight> weights = new ArrayList<>();
 
@@ -25,6 +35,25 @@ public class WeightFragment extends Fragment {
         weights.add(new Weight("01 Jan 2018", 63, "UP"));
         weights.add(new Weight("02 Jan 2018", 64, "DOWN"));
         weights.add(new Weight("03 Jan 2018", 63, "UP"));
+
+//        mDB = FirebaseFirestore.getInstance();
+//        _auth = FirebaseAuth.getInstance();
+//
+//        String _uid = _auth.getCurrentUser().getUid();
+//
+//        DocumentReference _docRef = mDB.collection("myfitness").document(_uid);
+//        _docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                documentSnapshot.getData();
+//
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//
+//            }
+//        });
 
         //เรียกใช้คลาส Adapter (สร้าง ArrayAdapter) ใช้ดึงข้อมูลใน Array มาแสดงใน ListView
         //รับตัวแปร 3 ตัว คือ context, id ของ Layout, Data จาก Array

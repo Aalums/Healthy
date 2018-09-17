@@ -59,6 +59,7 @@ public class MenuFragment extends Fragment {
                                 .addToBackStack(null)
                                 .commit();
                         Log.d("MENU", "GOTO WEIGHT");
+                        break;
                     }
                     case "Sign out": {
                         _mAuth.signOut();
@@ -68,6 +69,7 @@ public class MenuFragment extends Fragment {
                                 .addToBackStack(null)
                                 .commit();
                         Log.d("MENU", "Logout");
+                        break;
                     }
                 }
             }
