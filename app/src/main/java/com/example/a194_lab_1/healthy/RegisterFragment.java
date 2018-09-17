@@ -51,32 +51,41 @@ public class RegisterFragment extends Fragment{
                 String _passwordStr = _password.getText().toString();
                 String _repasswordStr = _repassword.getText().toString();
 
-                if (_passwordStr.length() < 6) {
+                if (_emailStr.isEmpty() || _passwordStr.isEmpty() || _repasswordStr.isEmpty()) {
                     Toast.makeText(
-                            getActivity(), "Password ต้องมี 6 ตัวอักษาขึ้นไป", Toast.LENGTH_SHORT
+                            getActivity(), "ERROR", Toast.LENGTH_SHORT
                     ).show();
-                    Log.d("REGISTER", "PASSWORD ERROR");
-                } else if (_passwordStr.equals(_repasswordStr) == false) {
-                    Toast.makeText(
-                            getActivity(), "Password ไม่ตรงกัน", Toast.LENGTH_SHORT
-                    ).show();
-                    Log.d("REGISTER", "PASSWORD NOT MATCH");
+                    Log.d("REGISTER", "FIELD EMPTY");
                 } else {
-                    mAuth.createUserWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            //ถ้าสำเร็จ ให้เรียกใช้ sendVerifiedEmail
-                            sendVerifiedEmail(mAuth.getCurrentUser());
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //ถ้าไม่สำเร็จ แสดงข้อความ ERROR
-                            Toast.makeText(
-                                    getActivity(), "ERROR", Toast.LENGTH_SHORT
-                            ).show();
-                        }
-                    });
+                    if (_passwordStr.length() < 6) {
+                        Toast.makeText(
+                                getActivity(), "Password ต้องมี 6 ตัวอักษาขึ้นไป", Toast.LENGTH_SHORT
+                        ).show();
+                        Log.d("REGISTER", "PASSWORD ERROR");
+                    } else if (_passwordStr.equals(_repasswordStr) == false) {
+                        Toast.makeText(
+                                getActivity(), "Password ไม่ตรงกัน", Toast.LENGTH_SHORT
+                        ).show();
+                        Log.d("REGISTER", "PASSWORD NOT MATCH");
+                    } else {
+                        //ถ้าผ่านเงื่อนไขการ REGISTER
+                        //สร้าง user บน gg firebase
+                        mAuth.createUserWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                //ถ้าสำเร็จ ให้เรียกใช้ sendVerifiedEmail
+                                sendVerifiedEmail(mAuth.getCurrentUser());
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //ถ้าไม่สำเร็จ แสดงข้อความ ERROR
+                                Toast.makeText(
+                                        getActivity(), "ERROR", Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        });
+                    }
                 }
             }
         });

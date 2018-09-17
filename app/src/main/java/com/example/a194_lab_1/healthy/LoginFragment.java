@@ -51,20 +51,27 @@ public class LoginFragment extends Fragment{
 
                 FirebaseUser mUser = mAuth.getCurrentUser();
 
-                if (_emailStr.isEmpty() && _passwordStr.isEmpty()){
+                if (mUser != null){
+                    //ถ้ามีการเข้าสู่ระบบอยู่แล้ว ถ้ากด login ก็จะไปหน้า Menu
+                    gotoMenu();
+                }else if (_emailStr.isEmpty() || _passwordStr.isEmpty()){
+                    //ไม่มีประวัติการเข้าสู่ระบบ และ ไม่มีการกรอก email&pass
                     Toast.makeText(
                             getActivity(), "กรุณาเข้าสู่ระบบ", Toast.LENGTH_SHORT
                     ).show();
                 } else {
+                    //ถ้ามีการป้อน email&pass email นั้นต้องได้รับการยืนยันแล้ว
                     mAuth.signInWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            getActivity().getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.main_view, new MenuFragment())
-                                    .addToBackStack(null)
-                                    .commit();
-                            Log.d("LOGIN", "GOTO MENU");
+                            if (authResult.getUser().isEmailVerified()) {
+                                //ถ้า email ยืนยันแล้ว ไปหน้า Menu
+                                gotoMenu();
+                            } else {
+                                Toast.makeText(
+                                        getActivity(), "Please verified your e-mail", Toast.LENGTH_SHORT
+                                ).show();
+                            }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -92,5 +99,14 @@ public class LoginFragment extends Fragment{
                 Log.d("USER", "GOTO REGISTER");
             }
         });
+    }
+
+    void gotoMenu (){
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_view, new MenuFragment())
+                .addToBackStack(null)
+                .commit();
+        Log.d("LOGIN", "GOTO MENU");
     }
 }

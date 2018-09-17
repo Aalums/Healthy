@@ -13,9 +13,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class WeightFormFragment extends Fragment {
+
+    FirebaseFirestore _firestore;
+    FirebaseAuth _auth;
 
     ArrayList<Weight> weights = new ArrayList<>();
 
@@ -28,6 +36,9 @@ public class WeightFormFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        _firestore = FirebaseFirestore.getInstance();
+        _auth = FirebaseAuth.getInstance();
 
         initBackBtn();
         initSaveBtn();
@@ -56,16 +67,50 @@ public class WeightFormFragment extends Fragment {
             public void onClick(View v) {
                 EditText _date = getView().findViewById(R.id.wei_fo_date);
                 EditText _weight = getView().findViewById(R.id.wei_fo_wei);
+
                 String _dateStr = _date.getText().toString();
-                int _weightInt = Integer.parseInt(_weight.getText().toString());
+                String _weightStr = _weight.getText().toString();
+                //เรียกค่า uid
+                String _uid = _auth.getCurrentUser().getUid();
 
-                weights.add(new Weight(_dateStr, _weightInt, "N/A"));
+                if (_dateStr.isEmpty() || _weightStr.isEmpty()) {
+                    Toast.makeText(
+                            getActivity(), "ERROR", Toast.LENGTH_SHORT
+                    ).show();
+                    Log.d("WEIGHT_FORM", "ERROR");
+                } else {
+                    Weight _data = new Weight(_dateStr, Integer.valueOf(_weightStr), "UP");
 
-                Toast.makeText(
-                        getActivity(), "บันทึกเรียบร้อย", Toast.LENGTH_SHORT
-                ).show();
-                Log.d("WEIGHT_FORM", "SAVE");
+                    _firestore.collection("myfitness")
+                            .document(_uid)
+                            .collection("weight")
+                            .document(_dateStr)
+                            .set(_data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(
+                                            getActivity(), "บันทึกเรียบร้อย", Toast.LENGTH_SHORT
+                                    ).show();
+                                    Log.d("WEIGHT_FORM", "SAVE");
 
+                                    getActivity().getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .replace(R.id.main_view, new WeightFragment())
+                                            .addToBackStack(null)
+                                            .commit();
+                                    Log.d("WEIGHT_FORM", "GOTO WEIGHT");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(
+                                    getActivity(), "ERROR", Toast.LENGTH_SHORT
+                            ).show();
+                            Log.d("WEIGHT_FORM", "ERROR");
+                        }
+                    });
+                }
             }
         });
     }
