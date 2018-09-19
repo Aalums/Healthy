@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -24,8 +25,6 @@ public class WeightFormFragment extends Fragment {
 
     FirebaseFirestore _firestore;
     FirebaseAuth _auth;
-
-    ArrayList<Weight> weights = new ArrayList<>();
 
     @Nullable
     @Override
@@ -74,11 +73,11 @@ public class WeightFormFragment extends Fragment {
                 String _uid = _auth.getCurrentUser().getUid();
 
                 if (_dateStr.isEmpty() || _weightStr.isEmpty()) {
-                    Toast.makeText(
-                            getActivity(), "ERROR", Toast.LENGTH_SHORT
-                    ).show();
+                    //ถ้าข้อมูลกรอกไม่ครบ
+                    Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
                     Log.d("WEIGHT_FORM", "ERROR");
                 } else {
+
                     Weight _data = new Weight(_dateStr, Integer.valueOf(_weightStr), "UP");
 
                     _firestore.collection("myfitness")
@@ -89,24 +88,20 @@ public class WeightFormFragment extends Fragment {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Toast.makeText(
-                                            getActivity(), "บันทึกเรียบร้อย", Toast.LENGTH_SHORT
-                                    ).show();
+                                    Toast.makeText(getActivity(), "บันทึกเรียบร้อย", Toast.LENGTH_SHORT).show();
                                     Log.d("WEIGHT_FORM", "SAVE");
 
                                     getActivity().getSupportFragmentManager()
                                             .beginTransaction()
                                             .replace(R.id.main_view, new WeightFragment())
-                                            .addToBackStack(null)
+                                            //.addToBackStack(null)
                                             .commit();
                                     Log.d("WEIGHT_FORM", "GOTO WEIGHT");
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(
-                                    getActivity(), "ERROR", Toast.LENGTH_SHORT
-                            ).show();
+                            Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
                             Log.d("WEIGHT_FORM", "ERROR");
                         }
                     });

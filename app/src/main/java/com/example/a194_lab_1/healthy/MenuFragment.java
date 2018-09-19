@@ -22,6 +22,12 @@ public class MenuFragment extends Fragment {
     ArrayList<String> _menu = new ArrayList<>();
     FirebaseAuth _mAuth;
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_menu, container, false);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -42,43 +48,41 @@ public class MenuFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                 Log.d("MENU", "Click on menu = " + _menu.get(i));
-                switch (_menu.get(i)) {
-                    case "BMI": {
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_view, new BMIFragment())
-                                .addToBackStack(null)
-                                .commit();
-                        Log.d("MENU", "GOTO BMI");
-                        break;
-                    }
-                    case "Weight": {
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_view, new WeightFragment())
-                                .addToBackStack(null)
-                                .commit();
-                        Log.d("MENU", "GOTO WEIGHT");
-                        break;
-                    }
-                    case "Sign out": {
-                        _mAuth.signOut();
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_view, new LoginFragment())
-                                .addToBackStack(null)
-                                .commit();
-                        Log.d("MENU", "Logout");
-                        break;
-                    }
-                }
+                checkMenu(i);
             }
         });
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_menu, container, false);
+    void checkMenu (int i) {
+        switch (_menu.get(i)) {
+            case "BMI": {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_view, new BMIFragment())
+                        .addToBackStack(null)
+                        .commit();
+                Log.d("MENU", "GOTO BMI");
+                break;
+            }
+            case "Weight": {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_view, new WeightFragment())
+                        .addToBackStack(null)
+                        .commit();
+                Log.d("MENU", "GOTO WEIGHT");
+                break;
+            }
+            case "Sign out": {
+                _mAuth.signOut();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_view, new LoginFragment())
+                        .addToBackStack(null)
+                        .commit();
+                Log.d("MENU", "Logout");
+                break;
+            }
+        }
     }
 }

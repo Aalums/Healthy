@@ -70,7 +70,8 @@ public class RegisterFragment extends Fragment{
                     } else {
                         //ถ้าผ่านเงื่อนไขการ REGISTER
                         //สร้าง user บน gg firebase
-                        mAuth.createUserWithEmailAndPassword(_emailStr, _passwordStr).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        mAuth.createUserWithEmailAndPassword(_emailStr, _passwordStr)
+                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
                                 //ถ้าสำเร็จ ให้เรียกใช้ sendVerifiedEmail
