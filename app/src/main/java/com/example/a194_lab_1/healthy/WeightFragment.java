@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -40,22 +41,20 @@ public class WeightFragment extends Fragment {
 
         String _uid = _auth.getCurrentUser().getUid();
 
+        ListView _weightList = getView().findViewById(R.id.weight_list);
+        final WeightAdapter _weightAdapter = new WeightAdapter(getActivity(), R.layout.fragment_weight_item, weights);
+        _weightList.setAdapter(_weightAdapter);
+        _weightAdapter.clear();
+
         mDB.collection("myfitness")
                 .document(_uid)
                 .collection("weight")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        _weightAdapter.clear();
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-                            if (doc.get("date") != null && doc.get("weight") != null && doc.get("status") != null) {
-                                weights.add(new Weight(
-                                        doc.get("date").toString(),
-                                        Integer.parseInt(doc.get("weight").toString()),
-                                        doc.get("status").toString()));
-                                ListView _weightList = getView().findViewById(R.id.weight_list);
-                                WeightAdapter _weightAdapter = new WeightAdapter(getActivity(), R.layout.fragment_weight_item, weights);
-                                _weightList.setAdapter(_weightAdapter);
-                            }
+                            weights.add(doc.toObject(Weight.class));
                         }
                     }
                 });

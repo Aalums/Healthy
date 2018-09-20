@@ -38,7 +38,7 @@ public class MenuFragment extends Fragment {
 
         _mAuth = FirebaseAuth.getInstance();
 
-        ArrayAdapter<String> _menuAdapter = new ArrayAdapter<>(
+        final ArrayAdapter<String> _menuAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1, _menu
         );
 
@@ -49,6 +49,8 @@ public class MenuFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                 Log.d("MENU", "Click on menu = " + _menu.get(i));
                 checkMenu(i);
+                //เวลากดปุ่มย้อนกลับ จะได้ไม่มีชุดเมนูเพิ่มขึ้นมา
+                _menuAdapter.clear();
             }
         });
     }
