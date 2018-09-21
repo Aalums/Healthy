@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginFragment extends Fragment{
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    final FirebaseUser mUser = mAuth.getCurrentUser();
 
     @Nullable
     @Override
@@ -34,12 +35,11 @@ public class LoginFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
 
         //ถ้ามีการเข้าสู่ระบบอยู่ ให้ไปหน้า Menu เลยโดยไม่ต้องกดปุ่ม Login
-        if (mAuth.getCurrentUser() != null){
+        if (mUser != null){
             gotoMenu();
-        } else {
-            initLoginBtn();
         }
 
+        initLoginBtn();
         initRegisterBtn();
 
     }
@@ -59,9 +59,8 @@ public class LoginFragment extends Fragment{
 
                 if (_emailStr.isEmpty() || _passwordStr.isEmpty()) {
                     //ไม่มีประวัติการเข้าสู่ระบบ และ ไม่มีการกรอก email&pass
-                    Toast.makeText(
-                            getActivity(), "กรุณาเข้าสู่ระบบ", Toast.LENGTH_SHORT
-                    ).show();
+                    Toast.makeText(getActivity(), "กรุณากรอก email และ password", Toast.LENGTH_SHORT).show();
+                    Log.d("LOGIN", "FIELD EMPTY");
                 } else {
                     //ถ้ามีการเข้าสู่ระบบอยู่แล้ว ถ้ากด login ก็จะไปหน้า Menu
                     checkVerified(_emailStr, _passwordStr);
@@ -80,7 +79,7 @@ public class LoginFragment extends Fragment{
                         .replace(R.id.main_view, new RegisterFragment())
                         .addToBackStack(null)
                         .commit();
-                Log.d("USER", "GOTO REGISTER");
+                Log.d("LOGIN", "GOTO REGISTER");
             }
         });
     }
@@ -103,17 +102,15 @@ public class LoginFragment extends Fragment{
                     //ถ้า email ยืนยันแล้ว ไปหน้า Menu
                     gotoMenu();
                 } else {
-                    Toast.makeText(
-                            getActivity(), "Please verified your e-mail", Toast.LENGTH_SHORT
-                    ).show();
+                    Toast.makeText(getActivity(), "Please verified your email", Toast.LENGTH_SHORT).show();
+                    Log.d("LOGIN", "email not verified");
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(
-                        getActivity(), "กรุณาลงทะเบียนผู้ใช้ก่อนเข้าสู้ระบบ", Toast.LENGTH_SHORT
-                ).show();
+                Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
+                Log.d("LOGIN", "ERROR");
             }
         });
     }

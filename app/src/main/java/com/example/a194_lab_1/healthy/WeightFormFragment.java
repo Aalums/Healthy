@@ -82,20 +82,6 @@ public class WeightFormFragment extends Fragment {
                     Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
                     Log.d("WEIGHT_FORM", "ERROR");
                 } else {
-//ลองทำ status
-//                    _firestore.collection("myfitness")
-//                            .document(_uid)
-//                            .collection("weight")
-//                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                                @Override
-//                                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-//                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-//                                        weightChk = Integer.parseInt(doc.get("weight").toString());
-//                                    }
-//                                }
-//                            });
-//                    String _status = checkStatus(Integer.parseInt(_weightStr), weightChk);
-//                    Log.d("STATUSSSSSSSSSS", "value = " + weightChk +_status);
 
                     Weight _data = new Weight(_dateStr, Integer.valueOf(_weightStr), "UP");
 
@@ -128,16 +114,4 @@ public class WeightFormFragment extends Fragment {
             }
         });
     }
-
-//    String checkStatus (int weight, int weightChk){
-//        String status;
-//        if (weight < weightChk) {
-//            status = "DOWN";
-//        } else if (weight > weightChk){
-//            status =  "UP";
-//        } else {
-//            status = " ";
-//        }
-//        return status;
-//    }
 }
