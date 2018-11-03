@@ -53,7 +53,8 @@ public class SleepFragment extends Fragment {
             String _timeWake = myCursor.getString(2);
             String _date = myCursor.getString(3);
 
-            Log.d("SLEEP", "_id : "+myCursor.getInt(0)+" sleep : "+_timeSleep+" wake : "+_timeWake+" date : "+_date);
+            Log.d("SLEEP", "_id : "+myCursor.getInt(0)
+                    +" sleep : "+_timeSleep+" wake : "+_timeWake+" date : "+_date);
 
             sleeps.add(new Sleep(_timeSleep, _timeWake, _date));
         }
