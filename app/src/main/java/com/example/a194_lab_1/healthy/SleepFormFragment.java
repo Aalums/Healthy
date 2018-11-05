@@ -2,6 +2,7 @@ package com.example.a194_lab_1.healthy;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,10 @@ public class SleepFormFragment extends Fragment {
 
     SQLiteDatabase myDB;
     ContentValues _row;
+    Bundle _bundle;
+    int _bundleInt;
+    EditText _date, _sleep, _wake;
+    String _dateSql, _sleepSql, _wakeSql; //store data from db
 
     @Nullable
     @Override
@@ -29,6 +34,48 @@ public class SleepFormFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        //open to use db
+        myDB = getActivity().openOrCreateDatabase("my.db", Context.MODE_PRIVATE, null);
+
+        //create table if not exist
+        myDB.execSQL(
+                "CREATE TABLE IF NOT EXISTS user (_id INTEGER PRIMARY KEY AUTOINCREMENT, sleep VARCHAR(5), wake VARCHAR(5), date VARCHAR(11))"
+        );
+        Log.d("SLEEP_FORM", "CREATE TABLE ALREADY");
+
+        //get Bundle
+        _bundle = getArguments();
+
+        _date = getView().findViewById(R.id.sleep_fo_date);
+        _sleep = getView().findViewById(R.id.sleep_fo_timeSleep);
+        _wake = getView().findViewById(R.id.sleep_fo_timeWake);
+
+        int count = 0;
+
+        //แสดงข้อมูลเก่า เมื่อต้องการจะแก้ไข
+        if(_bundle != null){
+            _bundleInt = _bundle.getInt("_id"); //get Bundle to Int
+
+            Cursor myCursor = myDB.rawQuery("SELECT * FROM user", null);
+            while (myCursor.moveToNext()){
+                if(count == _bundleInt){
+                    _dateSql = myCursor.getString(3);
+                    _sleepSql = myCursor.getString(1);
+                    _wakeSql = myCursor.getString(2);
+                    _bundleInt = myCursor.getInt(0); //เช็คเป็น _id เพราะจะเอาไปอัพเดตตาราง
+
+                    _date.setText(_dateSql);
+                    _sleep.setText(_sleepSql);
+                    _wake.setText(_wakeSql);
+
+                    Log.d("SLEEP_FORM", "Count = "+count+" _bundleInt = "+_bundleInt+" _id = "+_bundleInt);
+                } else {
+                    count += 1;
+                }
+            }
+        }
+
 
         initSaveBtn();
         initBackBtn();
@@ -50,14 +97,12 @@ public class SleepFormFragment extends Fragment {
                 Log.d("SLEEP FORM", "CREATE TABLE");
 
                 EditText _date = getView().findViewById(R.id.sleep_fo_date);
-                EditText _timeSleep_hour = getView().findViewById(R.id.sleep_fo_timeSleep_hour);
-                EditText _timeSleep_min = getView().findViewById(R.id.sleep_fo_timeSleep_min);
-                EditText _timeWake_hour = getView().findViewById(R.id.sleep_fo_timeWake_hour);
-                EditText _timeWake_min = getView().findViewById(R.id.sleep_fo_timeWake_min);
+                EditText _timeSleep = getView().findViewById(R.id.sleep_fo_timeSleep);
+                EditText _timeWake= getView().findViewById(R.id.sleep_fo_timeWake);
 
                 String _dateStr = _date.getText().toString();
-                String _timeSleepStr = _timeSleep_hour.getText().toString() + ":" + _timeSleep_min.getText().toString();
-                String _timeWakeStr = _timeWake_hour.getText().toString() + ":" + _timeWake_min.getText().toString();
+                String _timeSleepStr = _timeSleep.getText().toString();
+                String _timeWakeStr = _timeWake.getText().toString();
 
                 Sleep _itemSleep = new Sleep();
                 _itemSleep.setContent(_timeSleepStr, _timeWakeStr, _dateStr);
