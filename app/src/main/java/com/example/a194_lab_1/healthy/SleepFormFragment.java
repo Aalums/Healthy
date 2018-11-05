@@ -105,13 +105,28 @@ public class SleepFormFragment extends Fragment {
                 String _timeWakeStr = _timeWake.getText().toString();
 
                 Sleep _itemSleep = new Sleep();
-                _itemSleep.setContent(_timeSleepStr, _timeWakeStr, _dateStr);
 
-                _row = _itemSleep.getContent();
+                if(_bundle != null){ //เช็คว่าข้อมูลไหนมีการอัพเดตมั่ง
+                    Log.d("SLEEP_FORM", "update = "+_dateStr+_timeSleepStr+_timeWakeStr);
 
-                myDB.insert("user", null, _row);
+                    _itemSleep.setContent(_timeSleepStr, _timeWakeStr, _dateSql);
+                    _row = _itemSleep.getContent();
 
-                Log.d("SLEEP FORM", "INSERT DATA");
+                    myDB.update("user", _row, "_id="+_bundleInt, null);
+
+                    Log.d("SLEEP FORM", "UPDATE ALREADY");
+                    Toast.makeText(getActivity(), "UPDATE COMPLETE", Toast.LENGTH_SHORT).show();
+                } else { //Bundle = null แปลว่าจะเพิ่มข้อมูล
+
+                    _itemSleep.setContent(_timeSleepStr, _timeWakeStr, _dateStr);
+
+                    _row = _itemSleep.getContent();
+
+                    myDB.insert("user", null, _row);
+
+                    Log.d("SLEEP FORM", "INSERT DATA");
+                    Toast.makeText(getActivity(), "SAVE", Toast.LENGTH_SHORT).show();
+                }
 
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
