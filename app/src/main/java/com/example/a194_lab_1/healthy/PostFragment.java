@@ -1,17 +1,22 @@
 package com.example.a194_lab_1.healthy;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -28,16 +33,13 @@ public class PostFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        try {
-            run("https://jsonplaceholder.typicode.com/posts");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        run("https://jsonplaceholder.typicode.com/posts");
+
         BtnBack();
 
     }
 
-    public void BtnBack () {
+    public void BtnBack() {
         Button _btnBack = getView().findViewById(R.id.post_btn_back);
         _btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,14 +54,24 @@ public class PostFragment extends Fragment {
         });
     }
 
-    OkHttpClient client = new OkHttpClient();
+    void run(String url){
+        OkHttpClient _client = new OkHttpClient();
 
-    String run(String url) throws IOException {
-        Request request = new Request.Builder()
+        Request _request = new Request.Builder()
                 .url(url)
                 .build();
 
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+        _client.newCall(_request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String _response = response.body().string();
+                Log.d("POST", _response);
+            }
+        });
     }
 }
