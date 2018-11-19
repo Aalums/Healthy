@@ -35,6 +35,7 @@ public class MenuFragment extends Fragment {
         _menu.add("BMI");
         _menu.add("Weight");
         _menu.add("Sleep");
+        _menu.add("Post");
         _menu.add("Sign out");
 
         _mAuth = FirebaseAuth.getInstance();
@@ -83,6 +84,15 @@ public class MenuFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 Log.d("MENU", "GOTO SLEEP");
+                break;
+            }
+            case "Post": {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_view, new PostFragment())
+                        .addToBackStack(null)
+                        .commit();
+                Log.d("MENU", "GOTO POST");
                 break;
             }
             case "Sign out": {
