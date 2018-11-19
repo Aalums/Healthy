@@ -1,22 +1,26 @@
 package com.example.a194_lab_1.healthy;
 
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -33,13 +37,12 @@ public class PostFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        run("https://jsonplaceholder.typicode.com/posts");
-
-        BtnBack();
+        initRestAPI();
+        initBackBtn();
 
     }
 
-    public void BtnBack() {
+    void initBackBtn() {
         Button _btnBack = getView().findViewById(R.id.post_btn_back);
         _btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,24 +57,73 @@ public class PostFragment extends Fragment {
         });
     }
 
-    void run(String url){
-        OkHttpClient _client = new OkHttpClient();
+    String result;
+    JSONArray jsonArray;
 
-        Request _request = new Request.Builder()
-                .url(url)
-                .build();
+    void initRestAPI()
+    {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
-        _client.newCall(_request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
+            protected Void doInBackground(Void... voids) {
+                OkHttpClient client = new OkHttpClient();
+                try {
+                    Request request = new Request.Builder().url("https://jsonplaceholder.typicode.com/posts").build();
+                    Response response = client.newCall(request).execute();
+                    result = response.body().string();
+                    jsonArray = new JSONArray(result);
+                }
+                catch (IOException e)
+                {
+                    Log.d("POST", "catch IOException : " + e.getMessage());
+                }
+                catch (JSONException e)
+                {
+                    Log.d("POST", "catch JSONException : " + e.getMessage());
+                }
+                return null;
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String _response = response.body().string();
-                Log.d("POST", _response);
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                try
+                {
+                    final ArrayList<JSONObject> posts = new ArrayList<>();
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject obj = jsonArray.getJSONObject(i);
+                        posts.add(obj);
+                    }
+
+                    ListView postListView = getView().findViewById(R.id.post_list);
+                    PostAdapter postAdapter = new PostAdapter(getContext(), R.layout.fragment_post_item, posts);
+                    postListView.setAdapter(postAdapter);
+                    postListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Bundle bundle = new Bundle();
+                            try{
+                                bundle.putInt("post id", posts.get(position).getInt("id"));
+                            }
+                            catch (JSONException e)
+                            {
+                                Log.d("POST", "catch JSONException : " + e.getMessage());
+                            }
+                            Fragment fragment = new CommentFragment();
+                            fragment.setArguments(bundle);
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            ft.replace(R.id.main_view, fragment).addToBackStack(null).commit();
+                        }
+                    });
+                }
+                catch (JSONException e)
+                {
+                    Log.d("POST", "Catch JSONException : " + e.getMessage());
+                }
             }
-        });
+        };
+        task.execute();
     }
 }
